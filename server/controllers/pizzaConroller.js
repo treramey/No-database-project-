@@ -2,9 +2,13 @@ let pizza = [
   {
     id: 0,
     Name: "The Awsome Pizza",
-    Suase: "Awsome Suase",
-    Meats: "All The Meats",
-    NonMeats: "Some stuff "
+    toppings: [
+      "Banana Peppers",
+      "Diced Tomatoes",
+      "Black Olives",
+      "Mushrooms",
+      "Pineapple"
+    ]
   }
 ];
 
@@ -15,15 +19,13 @@ const getPizzas = (req, res) => {
 };
 
 const postPizza = (req, res) => {
-  console.log(req.body);
-  const { Name, Suase, Meats, NonMeats } = req.body;
+  // console.log(req.body);
+  const { Name, toppings } = req.body;
 
   pizza.push({
     id,
     Name,
-    Suase,
-    Meats,
-    NonMeats
+    toppings
   });
   id++;
   res.status(200).json(pizza);
@@ -43,13 +45,13 @@ const removePizza = (req, res) => {
 
 const updatePizza = (req, res) => {
   const { id } = req.params;
-  const { Name, Suase, Meats, NonMeats } = req.body;
+  const { Name, Suace, Meats, NonMeats } = req.body;
 
   const targetElement = pizza.findIndex(element => element.id === +id);
   const pizzaEl = pizza[targetElement];
 
   pizzaEl.Name = Name || pizzaEl.Name;
-  pizzaEl.Suase = Suase || pizzaEl.Suase;
+  pizzaEl.Suase = Suace || pizzaEl.Suace;
   pizzaEl.Meats = Meats || pizzaEl.Meats;
   pizzaEl.NonMeats = NonMeats || pizzaEl.NonMeats;
   res.status(200).json(pizza);

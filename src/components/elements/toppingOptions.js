@@ -1,109 +1,111 @@
 import React, { Component } from "react";
 import Checkbox from "./CheckBox";
-
-const OPTIONS = [
-  "Ham",
-  "Beef",
-  "Salami",
-  "Pepperoni",
-  "Tomato Sauce",
-  "Marinara Sauce",
-  "BBQ Sauce",
-  "Parmesan White Sauce",
-  "Alfredo Sauce",
-  "Shredded Provolone Cheese",
-  "Cheddar Cheese",
-  "Feta Cheese",
-  "Hot Sauce",
-  "Jalapeno Peppers",
-  "Onions",
-  "Banana Peppers",
-  "Diced Tomatoes",
-  "Black Olives",
-  "Mushrooms",
-  "Pineapple",
-  "Green Peppers",
-  "Spinach",
-  "Roasted Red Peppers",
-  "Green Chili Peppers",
-  "Shredded Parmesan Asiago"
-];
+import Axios from "axios";
 
 export default class toppingOptions extends Component {
   constructor() {
     super();
     this.state = {
-      checkboxes: OPTIONS.reduce(
-        (options, option) => ({
-          ...options,
-          [option]: false
-        }),
-        {}
-      )
+      Name: "",
+      toppings: []
     };
   }
 
   createCheckbox = option => (
     <Checkbox
       label={option}
-      isSelected={this.state.checkboxes[option]}
-      onCheckboxChange={this.handleCheckboxXhange}
+      // isSelected={this.state.checkboxes[option]}
+      onCheckboxChange={this.handleChange}
       key={option}
     />
   );
 
-  handleCheckboxChange = changeEvent => {
-    const { name } = changeEvent.target;
-
-    this.setState(prevState => ({
-      checkboxes: {
-        ...prevState.checkboxes,
-        [name]: !prevState.checkboxes[name]
-      }
-    }));
+  handleNameChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleFormSubmit = formSubmitEvent => {
-    formSubmitEvent.preventDefault();
+  handleChange = e => {
+    const toppings = this.state.toppings;
+    let index;
+    if (e.target.checked) {
+      toppings.push(e.target.value);
+    } else {
+      index = toppings.indexOf(e.target.value);
+      toppings.splice(index, 1);
+    }
+    console.log(this.state.toppings);
+    this.setState({ toppings: toppings });
+  };
 
-    Object.keys(this.state.checkboxes)
-      .filter(checkbox => this.state.checkboxes[checkbox])
-      .forEach(checkbox => {
-        console.log(checkbox, "is selected.");
+  handleClick = () => {
+    const { Name, toppings } = this.state;
+    Axios.post("/api/pizza", {
+      Name,
+      toppings
+    })
+      .then(response => {
+        console.log(response);
+        this.setState({
+          Name: "",
+          toppings: ""
+        });
+      })
+      .catch(error => {
+        console.log(error);
       });
+  };
+
+  deselectAll = () => {
+    this.setState({
+      Name: "",
+      toppings: ""
+    });
   };
 
   createCheckboxes = items => items.map(this.createCheckbox);
 
   render() {
-    console.log(OPTIONS);
     return (
       <div className="Selections">
-        <div>
-          <h2>Topping's</h2>
-        </div>
-        <div>
-          <section>
-            <form onSubmit={this.handleFormSubmit}>
-              <h3>Sauce</h3>
-              {this.createCheckboxes(OPTIONS)}
-              <h3>Meats</h3>
-              {/* {this.createCheckboxes(OPTIONS[2])} */}
-              <h3>Non-Meats</h3>
-              {/* {this.createCheckboxes()} */}
-
-              <button
-                type="button"
-                className="btn btn-outline-primary mr-2"
-                onClick={this.deselectAll}
-              >
-                Deselect All
-              </button>
-              <button type="submit" className="btn btn-primary">
-                Save
-              </button>
-            </form>
-          </section>
+        <div className="createPizza">
+          <div className="createPizza__title">
+            <h1>
+              What shall we create today...
+              {/*eslint-disable-next-line*/}
+              <span className="emoji">🍕</span>
+            </h1>
+          </div>
+          <div>
+            <section>
+              <form onSubmit={this.handleFormSubmit}>
+                <h3>Name</h3>
+                <input
+                  type="text"
+                  onChange={this.handleNameChange}
+                  value={this.state.Name}
+                  name="Name"
+                />
+                <h3>Sauce</h3>
+                {this.createCheckboxes(this.props.Sauce)}
+                <h3>Meats</h3>
+                {this.createCheckboxes(this.props.Meats)}
+                <h3>Non-Meats</h3>
+                {this.createCheckboxes(this.props.NonMeats)}
+                <div className="buttons">
+                  <button
+                    type="submit"
+                    className="btn btn-outline-primary mr-2"
+                    onClick={this.deselectAll}
+                  >
+                    Deselect All
+                  </button>
+                  <button type="submit" onClick={this.handleClick}>
+                    Save
+                  </button>
+                </div>
+              </form>
+            </section>
+          </div>
         </div>
       </div>
     );
