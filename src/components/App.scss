@@ -48,10 +48,12 @@
 
 .Selections {
   padding: 1em;
-  background: #282a2d;
+  background: #202427;
+  box-shadow: 0 30px 80px 10px rgba(0, 0, 0, 0.2);
   border-radius: 2px;
   display: flex;
   flex-direction: column;
+  border-radius: 4px;
 
   // .checkbox {
   //   cursor: pointer;
@@ -100,6 +102,7 @@
   display: flex;
   overflow: hidden;
   border-radius: 4px;
+  background: #202427;
   box-shadow: 0 30px 80px 10px rgba(0, 0, 0, 0.2);
   margin-bottom: 32px !important;
 

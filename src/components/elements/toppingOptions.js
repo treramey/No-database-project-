@@ -99,7 +99,7 @@ export default class toppingOptions extends Component {
                   >
                     Deselect All
                   </button>
-                  <button type="submit" onClick={this.handleClick}>
+                  <button type="button" onClick={this.handleClick}>
                     Save
                   </button>
                 </div>
